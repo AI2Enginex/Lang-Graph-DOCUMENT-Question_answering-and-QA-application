@@ -12,7 +12,7 @@ import os
 import cleantext
 import time
 # Setting the API key for Google Generative AI service by assigning it to the environment variable 'GOOGLE_API_KEY'
-api_key = os.environ['GOOGLE_API_KEY'] = "AIzaSyC3eK--KpzUruD-Lf43oQaGbMTmCU6ab_k"
+api_key = os.environ['GOOGLE_API_KEY'] = "xxxxxxxxxx"
 
 # Configuring Google Generative AI module with the provided API key
 genai.configure(api_key=api_key)
