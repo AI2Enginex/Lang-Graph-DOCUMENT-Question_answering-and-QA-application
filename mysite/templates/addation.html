@@ -1,0 +1,34 @@
+{% extends 'home.html' %}
+
+{% block title %}
+Number Addation
+{% endblock %}
+
+{% block body %}
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert 
+                {% if message.tags == 'error' %}alert-danger
+                {% elif message.tags == 'success' %}alert-success
+                {% elif message.tags == 'warning' %}alert-warning
+                {% else %}alert-info
+                {% endif %}" 
+         role="alert">
+      {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+<h1>Add Two Numbers</h1>
+
+<!-- Form rendering -->
+<form method="post" action="{% url 'result' %}">
+    {% csrf_token %}
+    {{ form.as_p }} <!-- Renders form fields with labels and validation errors -->
+    <button type="submit">Add</button>
+</form>
+<br>
+<!-- Display the result -->
+{% if result is not None %}
+<h2>Result: {{ result }}</h2>
+{% endif %}
+{% endblock %}

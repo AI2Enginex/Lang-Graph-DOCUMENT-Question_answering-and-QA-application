@@ -1,0 +1,21 @@
+{% extends 'home.html' %}
+
+{% block title %}
+Result
+
+{% endblock %}
+
+{% block body %}
+
+
+<h1>Result Page</h1>
+
+<!-- Display the result -->
+{% if result %}
+<h2>The result of the addition is: {{ result }}</h2>
+{% else %}
+<h2>No result found.</h2>
+{% endif %}
+
+<!-- <a href="{% url 'add' %}">Go back to addition form</a> -->
+{% endblock %}

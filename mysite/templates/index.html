@@ -1,0 +1,68 @@
+{% extends 'home.html' %}
+
+{% block title %}
+DataFrame Display
+
+{% endblock %}
+
+{% block body %}
+
+<style>
+    h1 {
+        font-size: 60px;
+        padding-left: 100px;
+    }
+
+    h2 {
+        padding-left: 100px;
+        padding-top: 100px;
+    }
+
+    .table-striped {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 20px 0;
+        font-size: 18px;
+        text-align: left;
+        padding-left: 200px;
+    }
+
+
+    .table-striped th,
+    .table-striped td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .table-striped th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
+{% if messages %}
+  <div>
+    {% for message in messages %}
+      <div class="alert 
+           {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} 
+           alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<h1>DataFrame Display</h1>
+<div class="container mt-5">
+
+    <!-- Display the DataFrame -->
+    <div class="table-striped">
+        {{ df_table|safe }}
+    </div>
+
+</div>
+
+
+
+{% endblock %}

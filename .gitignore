@@ -1,0 +1,5 @@
+__pycache__/
+
+django_lessons/
+mysite/mysite/
+mysite/db.sqlite3

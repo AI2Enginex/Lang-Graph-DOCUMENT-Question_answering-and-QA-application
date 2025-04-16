@@ -1,0 +1,157 @@
+{% extends 'home.html' %}
+
+{% block title %}
+Document Question Answering
+{% endblock %}
+
+{% block body %}
+
+<style>
+    .page-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 40px;
+        flex-wrap: wrap;
+        margin-top: 40px;
+    }
+
+    .card-box {
+        background-color: #fff;
+        padding: 30px 40px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        min-width: 300px;
+    }
+
+    .upload-button {
+        margin-top: 15px;
+        background-color: lightgreen;
+        border-color: #fff;
+    }
+    
+    .upload-button:hover {
+        background-color: lightsalmon;
+        border-color: whitesmoke;
+    }
+
+    .summary-box {
+        max-width: 800px;
+        margin: 40px auto 0;
+        padding: 20px;
+        border-radius: 10px;
+        background: #f8f9fa;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .label-class {
+        margin-left: 500px;
+    }
+
+    .form-select {
+
+        width: fit-content;
+      
+       
+    }
+
+    .user-input{
+        border-radius: 20px;
+    }
+
+
+</style>
+
+{% if messages %}
+<div>
+    {% for message in messages %}
+    <div class="alert 
+           {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %} 
+           alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<center>
+    <h1>Document Question and Answering</h1>
+</center>
+
+<div class="page-wrapper">
+
+    <!-- Upload Form -->
+    <div class="card-box">
+        <form action="{% url 'model_answer' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 40px;">
+                <!-- Upload Section -->
+                <div>
+                    <h4>Upload Document</h4>
+                    {{ form.as_p }}
+                </div>
+
+                <!-- Dropdown Section -->
+                <div>
+                    <h4><label for="prompt_type">Select Technique</label></h4>
+                    <select name="prompt_type" class="form-select">
+                        <option value="key word extraction" {% if prompt_type == 'key word extraction' %}selected{% endif %}>Key Word Extraction</option>
+                        <option value="chain of thoughts" {% if prompt_type == 'chain of thoughts' %}selected{% endif %}>Chain of Thoughts</option>
+                        <option value="verification prompt" {% if prompt_type == 'verification prompt' %}selected{% endif %}>Verification Prompt</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary upload-button mt-3">Ask Questions</button>
+        </form>
+    </div>
+
+</div>
+
+{% if answer %}
+<div class="summary-box">
+    <h4>Answer:</h4>
+    <p>{{ answer }}</p>
+</div>
+{% endif %}
+
+<!-- Include this just before </body> or inside your <script> tag -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const fileInput = document.querySelector('input[type="file"]');
+        const alertContainer = document.createElement('div');
+
+        alertContainer.className = 'dropdown-alert alert alert-success text-center';
+        alertContainer.style.display = 'none';
+        alertContainer.style.position = 'fixed';
+        alertContainer.style.top = '0';
+        alertContainer.style.left = '0';
+        alertContainer.style.right = '0';
+        alertContainer.style.zIndex = '1050';
+        alertContainer.style.borderRadius = '0';
+        alertContainer.style.margin = '0';
+        alertContainer.style.transition = 'top 0.5s ease';
+
+        document.body.appendChild(alertContainer);
+
+        fileInput.addEventListener('change', function () {
+            if (fileInput.files.length > 0) {
+                alertContainer.textContent = '📄 "' + fileInput.files[0].name + '" selected!';
+                alertContainer.style.display = 'block';
+
+                // Auto-hide after 3 seconds
+                setTimeout(() => {
+                    alertContainer.style.display = 'none';
+                }, 3000);
+            } else {
+                alertContainer.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+</script>
+
+{% endblock %}
