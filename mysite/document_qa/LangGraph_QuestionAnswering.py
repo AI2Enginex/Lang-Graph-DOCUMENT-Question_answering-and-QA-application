@@ -12,7 +12,7 @@ import os
 import cleantext
 # import time
 # Setting the API key for Google Generative AI service by assigning it to the environment variable 'GOOGLE_API_KEY'
-api_key = os.environ['GOOGLE_API_KEY'] = "xxxxxxx"
+api_key = os.environ['GOOGLE_API_KEY'] = "xxxxxxxxxxxxx"
 
 # Configuring Google Generative AI module with the provided API key
 genai.configure(api_key=api_key)
@@ -404,9 +404,9 @@ class PromptTemplates:
                         Question: {question}
 
                         Provide the answer based ONLY on the above document content.
-                        
+                        Try to explain the answers briefly.\n
 
-                        Verify if the answer can be directly supported by the content.
+                        Verify if the answer can be directly supported by the content\n.
                         - If YES, state: "Verified: Answer supported by the document."
                         - If NO, state: "Cannot verify: The document does not contain enough information."
 

@@ -27,9 +27,6 @@ class SummarizationTemplate(View):
 class DocumentSummarizationView(View):
     template_name = 'summarization.html'
 
-    # def get(self, request):
-    #     form = DocumentUploadForm()
-    #     return render(request, self.template_name, {'form': form})
 
     def post(self, request):
         form = DocumentUploadForm(request.POST, request.FILES)
