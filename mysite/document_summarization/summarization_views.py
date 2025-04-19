@@ -13,7 +13,17 @@ from django.conf import settings
 from .LangGraph_summarization import StuffGraphExecuetion, MapReduceGraphExecuetion
 # Create your views here.
 
+
+
+# class for rendering the
+# template with the initial form
 class SummarizationTemplate(View):
+
+    """
+    The class helps in rendering the template with the form
+
+    """
+
     template_name = 'summarization.html'
 
     def get(self, request):
@@ -23,8 +33,18 @@ class SummarizationTemplate(View):
         'form': form,
         'prompt_type': prompt_type})
 
-    
+
+
+# class for implementing the 
+# document Summarization logic
 class DocumentSummarizationView(View):
+
+    """
+    This class allows the users to upload the "pdf" file and 
+    pass the file content to the LLM for generating the Summary
+    based on the available Techniques
+
+    """
     template_name = 'summarization.html'
 
 

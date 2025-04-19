@@ -12,7 +12,7 @@ import os
 import cleantext
 # import time
 # Setting the API key for Google Generative AI service by assigning it to the environment variable 'GOOGLE_API_KEY'
-api_key = os.environ['GOOGLE_API_KEY'] = "xxxxxxxxxxxxx"
+api_key = os.environ['GOOGLE_API_KEY'] = "xxxxxxxxxxxxxxxxxxxxxxxxxx"
 
 # Configuring Google Generative AI module with the provided API key
 genai.configure(api_key=api_key)
@@ -314,7 +314,7 @@ class PromptTemplates:
                     {context}
 
                     Now, answer the following question strictly based on the above information:
-                    Try to elaborate the answer if possible.
+                    Try to elaborate the answer in tot bore than 300 words.
                     
                     Question: {question}
 

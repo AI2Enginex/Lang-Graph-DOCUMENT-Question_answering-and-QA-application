@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-
+from django.core.files.storage import default_storage
 # Create your views here.
 import pandas as pd
 from django.contrib.auth import authenticate, login,logout
@@ -121,7 +121,13 @@ class LoginView(View):
 
 class LogoutView(View):
     def get(self, request):
-        logout(request)  
+
+        file_path = request.session.get('file_path')
+        if file_path and default_storage.exists(file_path):
+            default_storage.delete(file_path)
+        request.session.flush()
+        logout(request)
+        
         messages.success(request, "You have been logged out successfully.")
         return redirect('index') 
 

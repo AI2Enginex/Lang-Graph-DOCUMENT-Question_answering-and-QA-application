@@ -5,7 +5,6 @@ Document Question Answering
 {% endblock %}
 
 {% block body %}
-
 <style>
     .page-wrapper {
         display: flex;
@@ -29,7 +28,7 @@ Document Question Answering
         background-color: lightgreen;
         border-color: #fff;
     }
-    
+
     .upload-button:hover {
         background-color: lightsalmon;
         border-color: whitesmoke;
@@ -44,21 +43,19 @@ Document Question Answering
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
     }
 
-    .label-class {
-        margin-left: 500px;
-    }
-
     .form-select {
-
         width: fit-content;
-      
-       
     }
 
-    .user-input{
+    .user-input {
         border-radius: 20px;
     }
 
+    .file-status {
+        margin-top: 10px;
+        font-weight: bold;
+        color: #007bff;
+    }
 
 </style>
 
@@ -83,28 +80,35 @@ Document Question Answering
 
     <!-- Upload Form -->
     <div class="card-box">
-        <form action="{% url 'model_answer' %}" method="post" enctype="multipart/form-data">
+        <form id="upload-form" enctype="multipart/form-data">
             {% csrf_token %}
+            <h4>Upload Document</h4>
+            <input type="file" name="document" class="form-control" required>
+            <button type="submit" class="btn btn-primary upload-button mt-3">Upload Document</button>
+        </form>
+        <div class="file-status" id="file-status">
+            {% with request.session.file_path|cut:"/" as filename %}
+                File uploaded: {{ filename }}
+            {% endwith %}
+        </div>
 
-            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 40px;">
-                <!-- Upload Section -->
-                <div>
-                    <h4>Upload Document</h4>
-                    {{ form.as_p }}
-                </div>
+        <br>
+    <!-- </div> --->
 
-                <!-- Dropdown Section -->
-                <div>
-                    <h4><label for="prompt_type">Select Technique</label></h4>
-                    <select name="prompt_type" class="form-select">
-                        <option value="key word extraction" {% if prompt_type == 'key word extraction' %}selected{% endif %}>Key Word Extraction</option>
-                        <option value="chain of thoughts" {% if prompt_type == 'chain of thoughts' %}selected{% endif %}>Chain of Thoughts</option>
-                        <option value="verification prompt" {% if prompt_type == 'verification prompt' %}selected{% endif %}>Verification Prompt</option>
-                    </select>
-                </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary upload-button mt-3">Ask Questions</button>
+    <!-- Ask Question -->
+    <!-- <div class="card-box"> -->
+        <form action="{% url 'model_answer' %}" method="post">
+            {% csrf_token %}
+            <h4>Ask a Question</h4>
+            <input type="text" name="userquestion" class="form-control user-input" required>
+            <br>
+            <label for="prompt_type"><strong>Select Technique</strong></label>
+            <select name="prompt_type" class="form-select">
+                <option value="key word extraction" {% if prompt_type == 'key word extraction' %}selected{% endif %}>Key Word Extraction</option>
+                <option value="chain of thoughts" {% if prompt_type == 'chain of thoughts' %}selected{% endif %}>Chain of Thoughts</option>
+                <option value="verification prompt" {% if prompt_type == 'verification prompt' %}selected{% endif %}>Verification Prompt</option>
+            </select>
+            <button type="submit" class="btn btn-success mt-3">Get Answer</button>
         </form>
     </div>
 
@@ -117,41 +121,40 @@ Document Question Answering
 </div>
 {% endif %}
 
-<!-- Include this just before </body> or inside your <script> tag -->
+<!-- AJAX Upload Script -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const fileInput = document.querySelector('input[type="file"]');
-        const alertContainer = document.createElement('div');
+        const form = document.getElementById('upload-form');
+        const fileInput = form.querySelector('input[type="file"]');
+        const fileStatus = document.getElementById('file-status');
 
-        alertContainer.className = 'dropdown-alert alert alert-success text-center';
-        alertContainer.style.display = 'none';
-        alertContainer.style.position = 'fixed';
-        alertContainer.style.top = '0';
-        alertContainer.style.left = '0';
-        alertContainer.style.right = '0';
-        alertContainer.style.zIndex = '1050';
-        alertContainer.style.borderRadius = '0';
-        alertContainer.style.margin = '0';
-        alertContainer.style.transition = 'top 0.5s ease';
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
 
-        document.body.appendChild(alertContainer);
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const formData = new FormData(form);
 
-        fileInput.addEventListener('change', function () {
-            if (fileInput.files.length > 0) {
-                alertContainer.textContent = '📄 "' + fileInput.files[0].name + '" selected!';
-                alertContainer.style.display = 'block';
-
-                // Auto-hide after 3 seconds
-                setTimeout(() => {
-                    alertContainer.style.display = 'none';
-                }, 3000);
-            } else {
-                alertContainer.style.display = 'none';
-            }
+            fetch("{% url 'upload_doc' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    fileStatus.textContent = '📄 File uploaded: ' + data.file_name;
+                } else if (data.error) {
+                    fileStatus.textContent = '❌ ' + data.error;
+                    fileStatus.style.color = 'red';
+                }
+            })
+            .catch(err => {
+                fileStatus.textContent = 'Upload failed.';
+                fileStatus.style.color = 'red';
+            });
         });
     });
 </script>
-
-</script>
-
 {% endblock %}
