@@ -1,0 +1,50 @@
+.page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+
+.card-box {
+    background-color: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    min-width: 300px;
+}
+
+.upload-button {
+    margin-top: 15px;
+    background-color: lightgreen;
+    border-color: #fff;
+}
+
+.upload-button:hover {
+    background-color: lightsalmon;
+    border-color: whitesmoke;
+}
+
+.summary-box {
+    max-width: 800px;
+    margin: 40px auto 0;
+    padding: 20px;
+    border-radius: 10px;
+    background: #f8f9fa;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.form-select {
+    width: fit-content;
+}
+
+.user-input {
+    border-radius: 20px;
+}
+
+.file-status {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #007bff;
+}

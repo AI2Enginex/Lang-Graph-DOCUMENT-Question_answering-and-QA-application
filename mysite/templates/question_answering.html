@@ -1,63 +1,12 @@
 {% extends 'home.html' %}
-
+{% load static %}
 {% block title %}
 Document Question Answering
 {% endblock %}
 
 {% block body %}
-<style>
-    .page-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        gap: 40px;
-        flex-wrap: wrap;
-        margin-top: 40px;
-    }
+<link rel="stylesheet" href="{% static 'Document_QA/CSS/style.css' %}">
 
-    .card-box {
-        background-color: #fff;
-        padding: 30px 40px;
-        border-radius: 12px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        min-width: 300px;
-    }
-
-    .upload-button {
-        margin-top: 15px;
-        background-color: lightgreen;
-        border-color: #fff;
-    }
-
-    .upload-button:hover {
-        background-color: lightsalmon;
-        border-color: whitesmoke;
-    }
-
-    .summary-box {
-        max-width: 800px;
-        margin: 40px auto 0;
-        padding: 20px;
-        border-radius: 10px;
-        background: #f8f9fa;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .form-select {
-        width: fit-content;
-    }
-
-    .user-input {
-        border-radius: 20px;
-    }
-
-    .file-status {
-        margin-top: 10px;
-        font-weight: bold;
-        color: #007bff;
-    }
-
-</style>
 
 {% if messages %}
 <div>
@@ -86,17 +35,13 @@ Document Question Answering
             <input type="file" name="document" class="form-control" required>
             <button type="submit" class="btn btn-primary upload-button mt-3">Upload Document</button>
         </form>
-        <div class="file-status" id="file-status">
-            {% with request.session.file_path|cut:"/" as filename %}
-                File uploaded: {{ filename }}
-            {% endwith %}
-        </div>
+        <div class="file-status" id="file-status"></div>
 
         <br>
-    <!-- </div> --->
+        <!-- </div> --->
 
-    <!-- Ask Question -->
-    <!-- <div class="card-box"> -->
+        <!-- Ask Question -->
+        <!-- <div class="card-box"> -->
         <form action="{% url 'model_answer' %}" method="post">
             {% csrf_token %}
             <h4>Ask a Question</h4>
@@ -104,9 +49,12 @@ Document Question Answering
             <br>
             <label for="prompt_type"><strong>Select Technique</strong></label>
             <select name="prompt_type" class="form-select">
-                <option value="key word extraction" {% if prompt_type == 'key word extraction' %}selected{% endif %}>Key Word Extraction</option>
-                <option value="chain of thoughts" {% if prompt_type == 'chain of thoughts' %}selected{% endif %}>Chain of Thoughts</option>
-                <option value="verification prompt" {% if prompt_type == 'verification prompt' %}selected{% endif %}>Verification Prompt</option>
+                <option value="key word extraction" {% if prompt_type == 'key word extraction' %}selected{% endif %}>Key
+                    Word Extraction</option>
+                <option value="chain of thoughts" {% if prompt_type == 'chain of thoughts' %}selected{% endif %}>Chain of
+                    Thoughts</option>
+                <option value="verification prompt" {% if prompt_type == 'verification prompt' %}selected{% endif %}>
+                    Verification Prompt</option>
             </select>
             <button type="submit" class="btn btn-success mt-3">Get Answer</button>
         </form>
@@ -121,7 +69,7 @@ Document Question Answering
 </div>
 {% endif %}
 
-<!-- AJAX Upload Script -->
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const form = document.getElementById('upload-form');
@@ -141,19 +89,22 @@ Document Question Answering
                 },
                 body: formData
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message) {
-                    fileStatus.textContent = '📄 File uploaded: ' + data.file_name;
-                } else if (data.error) {
-                    fileStatus.textContent = '❌ ' + data.error;
-                    fileStatus.style.color = 'red';
-                }
-            })
-            .catch(err => {
-                fileStatus.textContent = 'Upload failed.';
-                fileStatus.style.color = 'red';
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        fileStatus.innerHTML = '✅ File uploaded: <strong>' + data.file_name + '</strong>';
+                        fileStatus.className = 'file-status alert alert-success text-center';
+                    } else if (data.error) {
+                        fileStatus.innerHTML = '❌ ' + data.error;
+                        fileStatus.className = 'file-status alert alert-danger text-center';
+                    }
+                    fileStatus.style.display = 'block';
+                })
+                .catch(err => {
+                    fileStatus.innerHTML = '⚠️ Upload failed.';
+                    fileStatus.className = 'file-status alert alert-warning text-center';
+                    fileStatus.style.display = 'block';
+                });
         });
     });
 </script>
